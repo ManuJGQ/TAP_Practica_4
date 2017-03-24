@@ -24,6 +24,11 @@ igvInterfaz::igvInterfaz() {
 	vistas[2].set(0, 10, 0);
 	vistas[3].set(0, 0, 10);
 
+	vistas2[0].set(7.5, 4.0, 8);
+	vistas2[1].set(10.5, 0, 0);
+	vistas2[2].set(0.5, 10, 0);
+	vistas2[3].set(0.5, 0, 10);
+
 	planos[1] = -3;
 	planos[2] = 1;
 
@@ -56,6 +61,9 @@ void igvInterfaz::crear_mundo(void) {
 	//// Apartado B: establecer los parámetros de la cámara en función de la escena concreta que se esté modelando
 	interfaz.camara.set(IGV_PARALELA, interfaz.get_vistas(interfaz.i), igvPunto3D(0, 0, 0), interfaz.get_va(),
 		-1 * 20, 1 * 20, -1 * 20, 1 * 20, interfaz.planos[1], 2000);
+
+	interfaz.camara2.set(IGV_PARALELA, interfaz.get_vistas2(interfaz.i), igvPunto3D(0.5, 0, 0), interfaz.get_va(),
+		-1 * 20, 1 * 20, -1 * 20, 1 * 20, interfaz.planos[1], 2000);
 }
 
 void igvInterfaz::configura_entorno(int argc, char** argv,
@@ -73,12 +81,9 @@ void igvInterfaz::configura_entorno(int argc, char** argv,
 	glutInitWindowPosition(_pos_X, _pos_Y);
 	glutCreateWindow(_titulo.c_str());
 
-	//float version = GLUI_Master.get_version();
-	//GLUI *glui_window = GLUI_Master.create_glui("GLUI");
-	////glui_window->add_button("Hello World!");
 
 	glEnable(GL_DEPTH_TEST); // activa el ocultamiento de superficies por z-buffer
-	glClearColor(1.0, 1.0, 1.0, 0.0); // establece el color de fondo de la ventana
+	glClearColor(0.0, 0.0, 0.0, 0.0); // establece el color de fondo de la ventana
 
 	glEnable(GL_LIGHTING); // activa la iluminacion de la escena
 	glEnable(GL_NORMALIZE); // normaliza los vectores normales para calculo iluminacion
@@ -162,21 +167,35 @@ void igvInterfaz::set_glutReshapeFunc(int w, int h) {
 
 void igvInterfaz::set_glutDisplayFunc() {
 	GLuint lista_impactos[1024]; // array con la lista de impactos cuando se visualiza en modo selección
-
+	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // borra la ventana y el z-buffer
 
-	// se establece el viewport
-	glViewport(0, 0, interfaz.get_ancho_ventana(), interfaz.get_alto_ventana());
+	for (int i = 0; i < 2; i++) {
+
+		if(i==1)glClear(GL_DEPTH_BUFFER_BIT);
+
+		// se establece el viewport
+		glViewport(0, 0, interfaz.get_ancho_ventana() , interfaz.get_alto_ventana());
 
 
-	// aplica las transformaciones en función de los parámetros de la cámara y del modo (visualización o selección)
-	interfaz.camara.aplicar();
+		// aplica las transformaciones en función de los parámetros de la cámara y del modo (visualización o selección)
+		
 
-	if (interfaz.pintarBezier)interfaz.bezier.pintarCurva();
-	else interfaz.velocidad.pintarCurva();
+		if (i == 0) {
+			interfaz.camara.aplicar();
+			glColorMask(GL_TRUE, GL_FALSE, GL_FALSE, GL_FALSE);
+		}
+		else {
+			interfaz.camara2.aplicar();
+			glColorMask(GL_FALSE, GL_FALSE, GL_TRUE, GL_FALSE);
+		}
 
-	// visualiza la escena
-	interfaz.escena.visualizar();
+		if (interfaz.pintarBezier)interfaz.bezier.pintarCurva();
+		else interfaz.velocidad.pintarCurva();
+
+		// visualiza la escena
+		interfaz.escena.visualizar();
+	}
 
 
 	// refresca la ventana
@@ -187,9 +206,11 @@ void igvInterfaz::set_glutDisplayFunc() {
 void igvInterfaz::set_glutMouseFunc(GLint boton, GLint estado, GLint x, GLint y) {
 	if (boton == 3) {
 		interfaz.camara.zoom(10);
+		interfaz.camara2.zoom(10);
 	}
 	if (boton == 4) {
 		interfaz.camara.zoom(-10);
+		interfaz.camara2.zoom(-10);
 	}
 
 	glutPostRedisplay();
