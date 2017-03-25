@@ -19,10 +19,14 @@ igvInterfaz::igvInterfaz() {
 	va.set(0, 1.0, 0);
 
 	i = 0;
-	vistas[0].set(6.0, 4.0, 8);
+
+	tc = 0.5;
+	d0 = 8;
+
+	vistas[0].set(6.0, 4.0, d0);
 	vistas[1].set(10, 0, 0);
 	vistas[2].set(0, 10, 0);
-	vistas[3].set(0, 0, 10);
+	vistas[3].set(0, 0, d0 + 2);
 
 	planos[1] = -3;
 	planos[2] = 1;
@@ -45,6 +49,8 @@ igvInterfaz::igvInterfaz() {
 	sphericalInterpolation = TAPSphericalInterpolation("sphericalInterpolation.txt");
 
 	pintarBezier = true;
+
+	anaglifo = true;
 }
 
 igvInterfaz::~igvInterfaz() {}
@@ -53,9 +59,9 @@ igvInterfaz::~igvInterfaz() {}
 // Metodos publicos ----------------------------------------
 
 void igvInterfaz::crear_mundo(void) {
-	//// Apartado B: establecer los parámetros de la cámara en función de la escena concreta que se esté modelando
+	//establecer los parámetros de la cámara en función de la escena concreta que se esté modelando
 	interfaz.camara.set(IGV_PARALELA, interfaz.get_vistas(interfaz.i), igvPunto3D(0, 0, 0), interfaz.get_va(),
-		-1 * 20, 1 * 20, -1 * 20, 1 * 20, interfaz.planos[1], 2000, 0.5);
+		-1 * 20, 1 * 20, -1 * 20, 1 * 20, interfaz.planos[1], 2000, interfaz.tc);
 
 }
 
@@ -98,7 +104,7 @@ void igvInterfaz::set_glutKeyboardFunc(unsigned char key, int x, int y) {
 		if (interfaz.i > 3)interfaz.i = 0;
 		if (interfaz.i == 2)interfaz.set_va(1.0, 0, 0);
 		else interfaz.set_va(0, 1.0, 0);
-		interfaz.camara.set(interfaz.get_vistas(interfaz.i), igvPunto3D(0, 0, 0), interfaz.get_va(),0.5);
+		interfaz.camara.set(interfaz.get_vistas(interfaz.i), igvPunto3D(0, 0, 0), interfaz.get_va(), interfaz.tc);
 		interfaz.camara.aplicar(0);
 		interfaz.camara.aplicar(1);
 		break;
@@ -129,6 +135,34 @@ void igvInterfaz::set_glutKeyboardFunc(unsigned char key, int x, int y) {
 			interfaz.movController.set_K2(-0.05);
 			interfaz.velocidad.set_K2(-0.05);
 		}
+		break;
+	case 'X':
+		interfaz.tc += 0.5;
+		//interfaz.camara.set_tc(interfaz.tc);
+		interfaz.camara.set(interfaz.get_vistas(interfaz.i), igvPunto3D(0, 0, 0), interfaz.get_va(), interfaz.tc);
+		break;
+	case 'x':
+		interfaz.tc -= 0.5;
+		//interfaz.camara.set_tc(interfaz.tc);
+		interfaz.camara.set(interfaz.get_vistas(interfaz.i), igvPunto3D(0, 0, 0), interfaz.get_va(), interfaz.tc);
+		break;
+	case 'Z':
+		interfaz.d0 += 0.5;
+		interfaz.vistas[0].set(6.0, 4.0, interfaz.d0);
+		interfaz.vistas[3].set(0, 0, interfaz.d0 + 2);
+		interfaz.camara.set_d0(interfaz.d0);
+		interfaz.camara.set(interfaz.get_vistas(interfaz.i), igvPunto3D(0, 0, 0), interfaz.get_va(), interfaz.tc);
+		break;
+	case 'z':
+		interfaz.d0 -= 0.5;
+		interfaz.vistas[0].set(6.0, 4.0, interfaz.d0);
+		interfaz.vistas[3].set(0, 0, interfaz.d0 + 2);
+		interfaz.camara.set_d0(interfaz.d0);
+		interfaz.camara.set(interfaz.get_vistas(interfaz.i), igvPunto3D(0, 0, 0), interfaz.get_va(), interfaz.tc);
+		break;
+	case 'M':
+	case 'm': 
+		interfaz.set_anaglifo(interfaz.get_anaglifo() ? false : true);
 		break;
 	case 'A':
 	case 'a': // activa/desactiva la animación de la escena
@@ -170,7 +204,14 @@ void igvInterfaz::set_glutDisplayFunc() {
 		glClear(GL_DEPTH_BUFFER_BIT);
 
 		// se establece el viewport
-		glViewport(0, 0, interfaz.get_ancho_ventana() , interfaz.get_alto_ventana());
+		if (interfaz.anaglifo)glViewport(0, 0, interfaz.get_ancho_ventana() , interfaz.get_alto_ventana());
+		else {
+			if (i == 0) {
+				glViewport(0, 0, interfaz.get_ancho_ventana() / 2, interfaz.get_alto_ventana());
+			} else {
+				glViewport(interfaz.get_ancho_ventana() / 2, 0, interfaz.get_ancho_ventana() / 2, interfaz.get_alto_ventana());
+			}
+		}
 
 
 		// aplica las transformaciones en función de los parámetros de la cámara y del modo (visualización o selección)
@@ -178,11 +219,11 @@ void igvInterfaz::set_glutDisplayFunc() {
 
 		if (i == 0) {
 			interfaz.camara.aplicar(0);
-			glColorMask(GL_TRUE, GL_FALSE, GL_FALSE, GL_FALSE);
+			if(interfaz.anaglifo)glColorMask(GL_TRUE, GL_FALSE, GL_FALSE, GL_FALSE);
 		}
 		else {
 			interfaz.camara.aplicar(1);
-			glColorMask(GL_FALSE, GL_FALSE, GL_TRUE, GL_FALSE);
+			if (interfaz.anaglifo)glColorMask(GL_FALSE, GL_FALSE, GL_TRUE, GL_FALSE);
 		}
 
 		if (interfaz.pintarBezier)interfaz.bezier.pintarCurva();
@@ -191,7 +232,7 @@ void igvInterfaz::set_glutDisplayFunc() {
 		// visualiza la escena
 		interfaz.escena.visualizar();
 
-		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+		if (interfaz.anaglifo)glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 	}
 
 

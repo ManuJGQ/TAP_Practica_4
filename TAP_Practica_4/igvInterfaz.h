@@ -57,6 +57,11 @@ protected:
 	igvEscena3D escena; // escena que se visualiza en la ventana definida por igvInterfaz
 	TAPStereoscopicCamera camara;
 
+	bool anaglifo;
+
+	float tc;
+	float d0;
+
 	// atributos para la selección mediante el ratón
 	modoInterfaz modo; // IGV_VISUALIZAR: en la ventana se va a visualizar de manera normal la escena, 
 					   // IGV_SELECCIONAR: se ha pulsado sobre la ventana de visualización, la escena se debe
@@ -117,6 +122,9 @@ public:
 	void set_vista(bool _vista) { vista = _vista; };
 	bool get_perspectiva() { return perspectiva; };
 	void set_perspectiva(bool _perspectiva) { perspectiva = _perspectiva; };
+
+	bool get_anaglifo() { return anaglifo; };
+	void set_anaglifo(bool _anaglifo) { anaglifo = _anaglifo; };
 
 };
 
