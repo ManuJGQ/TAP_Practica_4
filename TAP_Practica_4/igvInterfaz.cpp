@@ -24,11 +24,6 @@ igvInterfaz::igvInterfaz() {
 	vistas[2].set(0, 10, 0);
 	vistas[3].set(0, 0, 10);
 
-	vistas2[0].set(7.5, 4.0, 8);
-	vistas2[1].set(10.5, 0, 0);
-	vistas2[2].set(0.5, 10, 0);
-	vistas2[3].set(0.5, 0, 10);
-
 	planos[1] = -3;
 	planos[2] = 1;
 
@@ -60,10 +55,8 @@ igvInterfaz::~igvInterfaz() {}
 void igvInterfaz::crear_mundo(void) {
 	//// Apartado B: establecer los parámetros de la cámara en función de la escena concreta que se esté modelando
 	interfaz.camara.set(IGV_PARALELA, interfaz.get_vistas(interfaz.i), igvPunto3D(0, 0, 0), interfaz.get_va(),
-		-1 * 20, 1 * 20, -1 * 20, 1 * 20, interfaz.planos[1], 2000);
+		-1 * 20, 1 * 20, -1 * 20, 1 * 20, interfaz.planos[1], 2000, 0.5);
 
-	interfaz.camara2.set(IGV_PARALELA, interfaz.get_vistas2(interfaz.i), igvPunto3D(0.5, 0, 0), interfaz.get_va(),
-		-1 * 20, 1 * 20, -1 * 20, 1 * 20, interfaz.planos[1], 2000);
 }
 
 void igvInterfaz::configura_entorno(int argc, char** argv,
@@ -105,8 +98,9 @@ void igvInterfaz::set_glutKeyboardFunc(unsigned char key, int x, int y) {
 		if (interfaz.i > 3)interfaz.i = 0;
 		if (interfaz.i == 2)interfaz.set_va(1.0, 0, 0);
 		else interfaz.set_va(0, 1.0, 0);
-		interfaz.camara.set(interfaz.get_vistas(interfaz.i), igvPunto3D(0, 0, 0), interfaz.get_va());
-		interfaz.camara.aplicar();
+		interfaz.camara.set(interfaz.get_vistas(interfaz.i), igvPunto3D(0, 0, 0), interfaz.get_va(),0.5);
+		interfaz.camara.aplicar(0);
+		interfaz.camara.aplicar(1);
 		break;
 	case '1':
 		interfaz.opcion = '1';
@@ -162,7 +156,8 @@ void igvInterfaz::set_glutReshapeFunc(int w, int h) {
 	interfaz.set_alto_ventana(h);
 
 	// establece los parámetros de la cámara y de la proyección
-	interfaz.camara.aplicar();
+	interfaz.camara.aplicar(0);
+	interfaz.camara.aplicar(1);
 }
 
 void igvInterfaz::set_glutDisplayFunc() {
@@ -172,7 +167,7 @@ void igvInterfaz::set_glutDisplayFunc() {
 
 	for (int i = 0; i < 2; i++) {
 
-		if(i==1)glClear(GL_DEPTH_BUFFER_BIT);
+		glClear(GL_DEPTH_BUFFER_BIT);
 
 		// se establece el viewport
 		glViewport(0, 0, interfaz.get_ancho_ventana() , interfaz.get_alto_ventana());
@@ -182,11 +177,11 @@ void igvInterfaz::set_glutDisplayFunc() {
 		
 
 		if (i == 0) {
-			interfaz.camara.aplicar();
+			interfaz.camara.aplicar(0);
 			glColorMask(GL_TRUE, GL_FALSE, GL_FALSE, GL_FALSE);
 		}
 		else {
-			interfaz.camara2.aplicar();
+			interfaz.camara.aplicar(1);
 			glColorMask(GL_FALSE, GL_FALSE, GL_TRUE, GL_FALSE);
 		}
 
@@ -195,6 +190,8 @@ void igvInterfaz::set_glutDisplayFunc() {
 
 		// visualiza la escena
 		interfaz.escena.visualizar();
+
+		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 	}
 
 
@@ -206,11 +203,9 @@ void igvInterfaz::set_glutDisplayFunc() {
 void igvInterfaz::set_glutMouseFunc(GLint boton, GLint estado, GLint x, GLint y) {
 	if (boton == 3) {
 		interfaz.camara.zoom(10);
-		interfaz.camara2.zoom(10);
 	}
 	if (boton == 4) {
 		interfaz.camara.zoom(-10);
-		interfaz.camara2.zoom(-10);
 	}
 
 	glutPostRedisplay();

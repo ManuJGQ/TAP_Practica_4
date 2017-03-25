@@ -59,7 +59,7 @@ void igvCamara::set(tipoCamara _tipo, igvPunto3D _P0, igvPunto3D _r, igvPunto3D 
 }
 
 void igvCamara::aplicar(void) {
-	if (modo == IGV_VISUALIZACION) {
+	//if (modo == IGV_VISUALIZACION) {
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 
@@ -76,41 +76,41 @@ void igvCamara::aplicar(void) {
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 		gluLookAt(P0[X], P0[Y], P0[Z], r[X], r[Y], r[Z], V[X], V[Y], V[Z]);
-	}
+	//}
 
-	if (modo == IGV_SELECCION) {
-		// obtener el tamano actual del viewport
+	//if (modo == IGV_SELECCION) {
+	//	// obtener el tamano actual del viewport
 
-		GLint viewport[4] = { xwmin,ywmin,xwmax - xwmin,ywmax - ywmin };
-		glGetIntegerv(GL_VIEWPORT, viewport);
+	//	GLint viewport[4] = { xwmin,ywmin,xwmax - xwmin,ywmax - ywmin };
+	//	glGetIntegerv(GL_VIEWPORT, viewport);
 
 
-		// cargar la matriz de proyección y generar el volumen de vision para la selección alrededor del pixel pulsado
+	//	// cargar la matriz de proyección y generar el volumen de vision para la selección alrededor del pixel pulsado
 
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
+	//	glMatrixMode(GL_PROJECTION);
+	//	glLoadIdentity();
 
-		gluPickMatrix(cursorX, viewport[3] - cursorY, ancho_seleccion, alto_seleccion, viewport);
+	//	gluPickMatrix(cursorX, viewport[3] - cursorY, ancho_seleccion, alto_seleccion, viewport);
 
-		// calcular la proyeccion (paralela, frustum o perspectiva), la misma que en modo visualización
+	//	// calcular la proyeccion (paralela, frustum o perspectiva), la misma que en modo visualización
 
-		if (tipo == IGV_PARALELA) {
-			glOrtho(xwmin, xwmax, ywmin, ywmax, znear, zfar);
-		}
-		if (tipo == IGV_FRUSTUM) {
-			glFrustum(xwmin, xwmax, ywmin, ywmax, znear, zfar);
-		}
-		if (tipo == IGV_PERSPECTIVA) {
-			gluPerspective(angulo, raspecto, znear, zfar);
-		}
+	//	if (tipo == IGV_PARALELA) {
+	//		glOrtho(xwmin, xwmax, ywmin, ywmax, znear, zfar);
+	//	}
+	//	if (tipo == IGV_FRUSTUM) {
+	//		glFrustum(xwmin, xwmax, ywmin, ywmax, znear, zfar);
+	//	}
+	//	if (tipo == IGV_PERSPECTIVA) {
+	//		gluPerspective(angulo, raspecto, znear, zfar);
+	//	}
 
-		// cargar la matriz de modelado y establecer la transformación de la cámara
+	//	// cargar la matriz de modelado y establecer la transformación de la cámara
 
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-		gluLookAt(P0[X], P0[Y], P0[Z], r[X], r[Y], r[Z], V[X], V[Y], V[Z]);
+	//	glMatrixMode(GL_MODELVIEW);
+	//	glLoadIdentity();
+	//	gluLookAt(P0[X], P0[Y], P0[Z], r[X], r[Y], r[Z], V[X], V[Y], V[Z]);
 
-	}
+	//}
 }
 
 void igvCamara::zoom(double factor) {

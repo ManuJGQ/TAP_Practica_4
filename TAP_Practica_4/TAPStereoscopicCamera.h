@@ -27,6 +27,55 @@ public:
 	void set(tipoCamara _tipo, igvPunto3D _P0, igvPunto3D _r, igvPunto3D _V,
 		double _angulo, double _raspecto, double _znear, double _zfar, float _tc);
 
+	void aplicar(int i);
+
+	void zoom(double factor);
+
+	float get_tc() {
+		return tc;
+	}
+	void set_tc(float _tc) {
+		tc = _tc;
+
+		//Actualizamos la primera camara
+		igvPunto3D _P0A = leftCamera.P0;
+		_P0A.set(_P0A[0] - tc, _P0A[1], _P0A[2]);
+		igvPunto3D _rA = leftCamera.r;
+		_rA.set(_rA[0] - tc, _rA[1], _rA[2]);
+
+		leftCamera.P0 = _P0A;
+		leftCamera.r = _rA;
+
+		//Actualizamos la segunda camara
+		igvPunto3D _P0B = rightCamera.P0;
+		_P0A.set(_P0B[0] - tc, _P0B[1], _P0B[2]);
+		igvPunto3D _rB = rightCamera.r;
+		_rB.set(_rB[0] - tc, _rB[1], _rB[2]);
+
+		rightCamera.P0 = _P0B;
+		rightCamera.r = _rB;
+	}
+
+	float get_d0() {
+		return d0;
+	}
+	void set_d0(float _d0) {
+		d0 = _d0;
+
+		//Actualizamos la primera camara
+		igvPunto3D _P0A = leftCamera.P0;
+		_P0A.set(_P0A[0], _P0A[1], d0);
+
+		leftCamera.P0 = _P0A;
+
+		//Actualizamos la segunda camara
+		igvPunto3D _P0B = rightCamera.P0;
+		_P0A.set(_P0B[0], _P0B[1], d0);
+
+		rightCamera.P0 = _P0B;
+
+	}
+
 	~TAPStereoscopicCamera();
 };
 

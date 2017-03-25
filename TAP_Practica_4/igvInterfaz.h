@@ -10,6 +10,7 @@
 #include "TAPLinearInterpolation.h"
 #include "TAPSphericalInterpolation.h"
 #include "TAPMotionController.h"
+#include "TAPStereoscopicCamera.h"
 
 using namespace std;
 
@@ -47,7 +48,6 @@ protected:
 	int alto_ventana;  // alto inicial de la ventana de visualizacion
 
 	igvPunto3D vistas[4];
-	igvPunto3D vistas2[4];
 	igvPunto3D va;
 
 	bool formato;
@@ -55,8 +55,7 @@ protected:
 	bool perspectiva;
 
 	igvEscena3D escena; // escena que se visualiza en la ventana definida por igvInterfaz
-	igvCamara camara; // cámara que se utiliza para visualizar la escena
-	igvCamara camara2;
+	TAPStereoscopicCamera camara;
 
 	// atributos para la selección mediante el ratón
 	modoInterfaz modo; // IGV_VISUALIZAR: en la ventana se va a visualizar de manera normal la escena, 
@@ -109,7 +108,6 @@ public:
 	void set_alto_ventana(int _alto_ventana) { alto_ventana = _alto_ventana; };
 
 	igvPunto3D get_vistas(int i) { return vistas[i]; };
-	igvPunto3D get_vistas2(int i) { return vistas2[i]; };
 	igvPunto3D get_va() { return va; };
 	void set_va(const double& x, const double& y, const double& z) { va.set(x, y, z); };
 
