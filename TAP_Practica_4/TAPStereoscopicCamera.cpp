@@ -18,7 +18,7 @@ TAPStereoscopicCamera::TAPStereoscopicCamera(tipoCamara _tipo, igvPunto3D _P0, i
 
 	//Definimos la segunda camara
 	igvPunto3D _P0B = _P0;
-	_P0A.set(_P0B[0] + tc, _P0B[1], _P0B[2]);
+	_P0B.set(_P0B[0] + tc, _P0B[1], _P0B[2]);
 	igvPunto3D _rB = _r;
 	_rB.set(_rB[0] + tc, _rB[1], _rB[2]);
 
@@ -40,7 +40,7 @@ void TAPStereoscopicCamera::set(igvPunto3D _P0, igvPunto3D _r, igvPunto3D _V, fl
 
 	//Actualizamos la segunda camara
 	igvPunto3D _P0B = _P0;
-	_P0A.set(_P0B[0] + tc, _P0B[1], _P0B[2]);
+	_P0B.set(_P0B[0] + tc, _P0B[1], _P0B[2]);
 	igvPunto3D _rB = _r;
 	_rB.set(_rB[0] + tc, _rB[1], _rB[2]);
 
@@ -61,7 +61,7 @@ void TAPStereoscopicCamera::set(tipoCamara _tipo, igvPunto3D _P0, igvPunto3D _r,
 
 	//Actualizamos la segunda camara
 	igvPunto3D _P0B = _P0;
-	_P0A.set(_P0B[0] + tc, _P0B[1], _P0B[2]);
+	_P0B.set(_P0B[0] + tc, _P0B[1], _P0B[2]);
 	igvPunto3D _rB = _r;
 	_rB.set(_rB[0] + tc, _rB[1], _rB[2]);
 
@@ -83,7 +83,7 @@ void TAPStereoscopicCamera::set(tipoCamara _tipo, igvPunto3D _P0, igvPunto3D _r,
 
 	//Actualizamos la segunda camara
 	igvPunto3D _P0B = _P0;
-	_P0A.set(_P0B[0] + tc, _P0B[1], _P0B[2]);
+	_P0B.set(_P0B[0] + tc, _P0B[1], _P0B[2]);
 	igvPunto3D _rB = _r;
 	_rB.set(_rB[0] + tc, _rB[1], _rB[2]);
 

@@ -65,17 +65,17 @@ public:
 	void set_d0(float _d0) {
 		d0 = _d0;
 
-		////Actualizamos la primera camara
-		//igvPunto3D _P0A = leftCamera.P0;
-		//_P0A.set(_P0A[0], _P0A[1], d0);
+		//Actualizamos la primera camara
+		igvPunto3D _rA = leftCamera.r;
+		_rA.set(_rA[0], _rA[1], _rA[2] + d0);
 
-		//leftCamera.P0 = _P0A;
+		leftCamera.r = _rA;
 
-		////Actualizamos la segunda camara
-		//igvPunto3D _P0B = rightCamera.P0;
-		//_P0A.set(_P0B[0], _P0B[1], d0);
+		//Actualizamos la segunda camara
+		igvPunto3D _rB = rightCamera.r;
+		_rB.set(_rB[0], _rB[1], _rB[2] + d0);
 
-		//rightCamera.P0 = _P0B;
+		rightCamera.P0 = _rB;
 
 	}
 
